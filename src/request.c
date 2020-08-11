@@ -326,6 +326,22 @@ get_token (GDBusMethodInvocation *invocation)
                      interface, method, G_STRLOC);
         }
     }
+  else if (strcmp (interface, "org.freedesktop.portal.EmulatedInput") == 0)
+    {
+      if (strcmp (method, "EmulateInput") == 0 )
+        {
+          options = g_variant_get_child_value (parameters, 0);
+        }
+      else if (strcmp (method, "Connect") == 0)
+        {
+          // no request objects
+        }
+      else
+        {
+          g_warning ("Support for %s::%s missing in %s",
+                     interface, method, G_STRLOC);
+        }
+    }
   else if (strcmp (interface, "org.freedesktop.portal.Secret") == 0)
     {
       options = g_variant_get_child_value (parameters, 1);

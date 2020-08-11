@@ -57,6 +57,7 @@
 #include "camera.h"
 #include "secret.h"
 #include "wallpaper.h"
+#include "ei.h"
 
 static GMainLoop *loop = NULL;
 
@@ -280,7 +281,13 @@ on_bus_acquired (GDBusConnection *connection,
 #ifdef HAVE_PIPEWIRE
       export_portal_implementation (connection, camera_create (connection, lockdown));
 #endif
+
     }
+
+#ifdef HAVE_LIBEI
+  /*  FIXME: should probably be in the same condition as pipewire above */
+  export_portal_implementation (connection, ei_create (connection, lockdown));
+#endif
 
   if (implementation != NULL && implementation2 != NULL)
     export_portal_implementation (connection,

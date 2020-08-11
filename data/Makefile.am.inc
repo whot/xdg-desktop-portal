@@ -6,6 +6,7 @@ dist_introspection_DATA = \
 	data/org.freedesktop.portal.Device.xml \
 	data/org.freedesktop.portal.Documents.xml \
 	data/org.freedesktop.portal.Email.xml \
+	data/org.freedesktop.portal.EmulatedInput.xml \
 	data/org.freedesktop.portal.FileChooser.xml \
 	data/org.freedesktop.portal.FileTransfer.xml \
 	data/org.freedesktop.portal.GameMode.xml \

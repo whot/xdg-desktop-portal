@@ -39,6 +39,7 @@ PORTAL_IFACE_FILES =\
 	data/org.freedesktop.portal.Background.xml \
 	data/org.freedesktop.portal.GameMode.xml \
 	data/org.freedesktop.portal.Camera.xml \
+	data/org.freedesktop.portal.EmulatedInput.xml \
 	data/org.freedesktop.portal.Secret.xml \
 	data/org.freedesktop.portal.Wallpaper.xml \
 	$(NULL)
@@ -183,6 +184,13 @@ xdg_desktop_portal_SOURCES += \
 	$(NULL)
 endif
 
+if HAVE_LIBEI
+xdg_desktop_portal_SOURCES += \
+	src/ei.c			\
+	src/ei.h			\
+	$(NULL)
+endif
+
 if HAVE_GEOCLUE
 xdg_desktop_portal_SOURCES += \
 	src/location.c                  \
@@ -193,6 +201,7 @@ endif
 xdg_desktop_portal_LDADD = \
 	$(BASE_LIBS) \
 	$(PIPEWIRE_LIBS) \
+	$(LIBEI_LIBS) \
 	$(GEOCLUE_LIBS) \
 	$(NULL)
 xdg_desktop_portal_CFLAGS = \
@@ -201,6 +210,7 @@ xdg_desktop_portal_CFLAGS = \
 	-DBWRAP=\"$(BWRAP)\" \
 	$(BASE_CFLAGS) \
 	$(PIPEWIRE_CFLAGS) \
+	$(LIBEI_CFLAGS) \
 	$(GEOCLUE_CFLAGS) \
 	-I$(srcdir)/src \
 	-I$(builddir)/src \
