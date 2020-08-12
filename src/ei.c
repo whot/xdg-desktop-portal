@@ -23,6 +23,7 @@
 #include <gio/gdesktopappinfo.h>
 #include <gio/gunixsocketaddress.h>
 #include <stdio.h>
+#include <libreis.h>
 
 #include "device.h"
 #include "request.h"
@@ -123,6 +124,7 @@ connect_to_eis (const char *app_id,
   g_autoptr(GSocketClient) client = NULL;
   g_autoptr(GSocketConnection) connection = NULL;
   GSocket *socket = NULL;
+  int sockfd;
 
   socketpath = g_strdup_printf ("%s/eis-0", g_get_user_runtime_dir ());
   addr = g_unix_socket_address_new (socketpath);
@@ -137,7 +139,19 @@ connect_to_eis (const char *app_id,
   if (!socket)
     return -1;
 
-  return dup(g_socket_get_fd (socket));
+  sockfd = g_socket_get_fd(socket);
+
+  struct reis *reis = reis_new();
+  if (app_id && app_id[0] != '\0') {
+	  reis_set_name(reis, app_id);
+  } else {
+	  reis_set_name(reis, "unknown app id");
+  }
+
+  reis_apply(reis, sockfd);
+  reis_unref(reis);
+
+  return dup(sockfd);
 }
 
 static gboolean

@@ -109,7 +109,7 @@ AC_ARG_ENABLE(libei,
 	      [AS_HELP_STRING([--enable-libei],[Enable libei support. Needed for emulated input portal])],
 	      enable_libei=$enableval, enable_libei=yes)
 if test x$enable_libei = xyes ; then
-	PKG_CHECK_MODULES(LIBEI, [libei])
+	PKG_CHECK_MODULES(LIBREIS, [libreis])
 	AC_DEFINE([HAVE_LIBEI],[1], [Define to enable libei support])
 fi
 AM_CONDITIONAL([HAVE_LIBEI],[test "$enable_libei" = "yes"])

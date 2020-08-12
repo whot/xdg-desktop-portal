@@ -201,7 +201,7 @@ endif
 xdg_desktop_portal_LDADD = \
 	$(BASE_LIBS) \
 	$(PIPEWIRE_LIBS) \
-	$(LIBEI_LIBS) \
+	$(LIBREIS_LIBS) \
 	$(GEOCLUE_LIBS) \
 	$(NULL)
 xdg_desktop_portal_CFLAGS = \
@@ -210,7 +210,7 @@ xdg_desktop_portal_CFLAGS = \
 	-DBWRAP=\"$(BWRAP)\" \
 	$(BASE_CFLAGS) \
 	$(PIPEWIRE_CFLAGS) \
-	$(LIBEI_CFLAGS) \
+	$(LIBREIS_CFLAGS) \
 	$(GEOCLUE_CFLAGS) \
 	-I$(srcdir)/src \
 	-I$(builddir)/src \
