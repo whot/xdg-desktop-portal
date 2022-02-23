@@ -97,6 +97,7 @@ pipewire_dep = dependency('libpipewire-0.3',
                           version: '>= 0.2.90',
                           required: get_option('pipewire'))
 libsystemd_dep = dependency('libsystemd', required: get_option('systemd'))
+libei_dep = dependency('libei', required: get_option('libei'))
 
 bwrap = find_program('bwrap')
 
@@ -132,6 +133,11 @@ if have_libsystemd
   config_h.set('HAVE_LIBSYSTEMD', 1)
 endif
 
+have_libei = libei_dep.found()
+if have_libei
+  config_h.set('HAVE_LIBEI', 1)
+endif
+
 build_docbook = false
 xmlto = find_program('xmlto', required: get_option('docbook-docs'))
 if xmlto.found()
@@ -150,6 +156,7 @@ summary({
     'Enable docbook documentation': build_docbook,
     'Enable pipewire support': have_pipewire,
     'Enable libsystemd support': have_libsystemd,
+    'Enable libei support': have_libei,
     'Enable geoclue support': have_geoclue,
     'Enable libportal support': have_libportal,
     'Enable installed tests:': enable_installed_tests,

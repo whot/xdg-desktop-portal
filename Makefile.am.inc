@@ -10,6 +10,7 @@ PORTAL_IFACE_FILES =\
 	$(top_srcdir)/data/org.freedesktop.portal.FileTransfer.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.GameMode.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.Inhibit.xml \
+	$(top_srcdir)/data/org.freedesktop.portal.InputCapture.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.Location.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.MemoryMonitor.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.NetworkMonitor.xml \
@@ -39,6 +40,7 @@ PORTAL_IMPL_IFACE_FILES =\
 	$(top_srcdir)/data/org.freedesktop.impl.portal.Email.xml \
 	$(top_srcdir)/data/org.freedesktop.impl.portal.FileChooser.xml \
 	$(top_srcdir)/data/org.freedesktop.impl.portal.Inhibit.xml \
+	$(top_srcdir)/data/org.freedesktop.impl.portal.InputCapture.xml \
 	$(top_srcdir)/data/org.freedesktop.impl.portal.Lockdown.xml \
 	$(top_srcdir)/data/org.freedesktop.impl.portal.Notification.xml \
 	$(top_srcdir)/data/org.freedesktop.impl.portal.PermissionStore.xml \
