@@ -116,6 +116,15 @@ if test "x$with_systemd" = "xyes"; then
 fi
 AM_CONDITIONAL([HAVE_LIBSYSTEMD], [test "x$with_systemd" != "xno"])
 
+AC_ARG_ENABLE(libei,
+	      [AS_HELP_STRING([--enable-libei],[Enable libei support. Needed for catpure input portal])],
+	      enable_libei=$enableval, enable_libei=yes)
+if test x$enable_libei = xyes ; then
+	PKG_CHECK_MODULES(libei, [libei])
+	AC_DEFINE([HAVE_LIBEI],[1], [Define to enable libei support])
+fi
+AM_CONDITIONAL([HAVE_LIBEI],[test "$enable_libei" = "yes"])
+
 AC_ARG_ENABLE(docbook-docs,
         [AS_HELP_STRING([--enable-docbook-docs],[build documentation (requires xmlto)])],
         enable_docbook_docs=$enableval, enable_docbook_docs=auto)
