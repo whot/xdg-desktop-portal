@@ -173,6 +173,13 @@ xdg_desktop_portal_SOURCES += \
 	$(NULL)
 endif
 
+if HAVE_LIBEI
+xdg_desktop_portal_SOURCES += \
+	src/input-capture.c       \
+	src/input-capture.h       \
+	$(NULL)
+endif
+
 xdg_desktop_portal_LDADD = \
 	$(BASE_LIBS) \
 	$(PIPEWIRE_LIBS) \

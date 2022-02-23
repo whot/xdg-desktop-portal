@@ -108,6 +108,12 @@ if have_libsystemd
   xdg_desktop_portal_sources += sd_escape_sources
 endif
 
+if have_libei
+  xdg_desktop_portal_sources += files(
+    'input-capture.c',
+  )
+endif
+
 common_deps = [
   glib_dep,
   gio_dep,
@@ -119,6 +125,7 @@ xdg_desktop_portal_deps = common_deps + [
   geoclue_dep,
   pipewire_dep,
   libsystemd_dep,
+  libei_dep,
 ]
 
 incs_xdg_desktop_portal = [
