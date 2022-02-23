@@ -93,6 +93,7 @@
     <xi:include href="portal-org.freedesktop.portal.Account.xml"/>
     <xi:include href="portal-org.freedesktop.portal.Background.xml"/>
     <xi:include href="portal-org.freedesktop.portal.Camera.xml"/>
+    <xi:include href="portal-org.freedesktop.portal.CaptureInput.xml"/>
     <xi:include href="portal-org.freedesktop.portal.Device.xml"/>
     <xi:include href="portal-org.freedesktop.portal.Documents.xml"/>
     <xi:include href="portal-org.freedesktop.portal.DynamicLauncher.xml"/>

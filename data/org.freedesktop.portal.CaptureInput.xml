@@ -1,0 +1,376 @@
+<?xml version="1.0"?>
+<!--
+ Copyright (C) 2022 Red Hat, Inc.
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library. If not, see <http://www.gnu.org/licenses/>.
+
+ Author: Matthias Clasen <mclasen@redhat.com>
+-->
+
+<node name="/" xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+  <!--
+      org.freedesktop.portal.CaptureInput:
+      @short_description: Portal for permitting input capture
+
+      The CaptureInput portal allows capture input events from connected
+      physical or logical devices. Once capturing is activated by the
+      compositor, events from physical or logical devices are sent directly to
+      the application instead of using those events to update the pointer
+      position on-screen. The compositor is in control of the input capturing
+      and may filter events and/or terminate the capturing at any time.
+
+      Input capturing is an asynchronous operation using "triggers". An
+      application sets up a number of triggers but it is the compositor who
+      decides when the trigger conditions are met. Currently, the only defined
+      trigger are pointer barriers: horizontal or vertical "lines" on the screen
+      that should trigger when the cursor moves across those lines.
+      See org.freedesktop.portal.CaptureInput.SetPointerBarriers().
+
+      There is currently no way for an application to request immediate input
+      capture.
+
+      The CaptureInput portal merely *manages* the logic when input should be
+      captured. The transport of actual input events is delegated to a
+      transport layer, specifically libei. See org.freedesktop.portal.CaptureInput.ConnectToEIS().
+
+      This documentation describes version 1 of this interface.
+   -->
+  <interface name="org.freedesktop.portal.CaptureInput">
+    <!--
+        CreateSession:
+        @options: Vardict with optional further information
+        @capabilities: Bitmask of requested capabilities, see the AvailableCapabilities property
+        @handle: Object path for the #org.freedesktop.portal.Request object representing this call
+
+        Create a capture input session. A successfully created session can at
+        any time be closed using org.freedesktop.portal.Session.Close(), or may
+        at any time be closed by the portal implementation, which will be
+        signalled via #org.freedesktop.portal.Session::Closed.
+
+        Supported keys in the @options vardict include:
+        <variablelist>
+          <varlistentry>
+            <term>handle_token s</term>
+            <listitem><para>
+              A string that will be used as the last element of the @handle. Must be a valid
+              object path element. See the #org.freedesktop.portal.Request documentation for
+              more information about the @handle.
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>session_handle_token s</term>
+            <listitem><para>
+              A string that will be used as the last element of the session handle. Must be a valid
+              object path element. See the #org.freedesktop.portal.Session documentation for
+              more information about the session handle.
+            </para></listitem>
+          </varlistentry>
+        </variablelist>
+
+        The following results get returned via the #org.freedesktop.portal.Request::Response signal:
+        <variablelist>
+          <varlistentry>
+            <term>session_handle o</term>
+            <listitem><para>
+              The session handle. An object path for the
+              #org.freedesktop.portal.Session object representing the created
+              session.
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>capabilities u</term>
+            <listitem><para>
+              The capabilities available to this session. This is always a
+              subset of the requested capabilities.
+              See the AvailableCapabilities property for details. Note that
+              while a capability may be available to a session, there is no
+              guarantee a device with that capability will trigger input
+              capture.
+            </para></listitem>
+          </varlistentry>
+        </variablelist>
+    -->
+    <method name="CreateSession">
+      <arg type="a{sv}" name="options" direction="in"/>
+      <arg type="u" name="capabilities" direction="in"/>
+      <arg type="o" name="handle" direction="out"/>
+    </method>
+
+    <!--
+        GetRegions:
+        @session_handle: Object path for the #org.freedesktop.portal.Session object
+        @options: Vardict with optional further information
+        @regions: An array of 4 integers, each specifying a region's width, height and x/y offset.
+
+        Retrieve the available input regions for this session.
+        The regions may not be continuous and may be a logical representation
+        of the physical screens (e.g. a 4k screen may be represented as
+        low-resolution screen instead).
+
+        If the regions change (e.g. a monitor is unplugged), the
+        #org.freedesktop.portal.CaptureInput::RegionsChanged signal is emitted
+        and the application should re-request the current regions to update its internal state.
+
+        Note that regions are session-specific, there is no guarantee that two
+        applications see the same screen regions. An empty region list implies
+        that no pointer barriers can be set.
+    -->
+    <method name="GetRegions">
+      <arg type="o" name="session_handle" direction="in"/>
+      <arg type="a{sv}" name="options" direction="in"/>
+      <arg type="a(uuii)" name="regions" direction="out"/>
+    </method>
+
+    <!--
+        SetPointerBarriers:
+        @session_handle: Object path for the #org.freedesktop.portal.Session object
+        @options: Vardict with optional further information
+        @barriers: An array of vardicts, each specifying one barrier
+        @handle: Object path for the #org.freedesktop.portal.Request object representing this call
+
+        Set up zero or more pointer barriers. Pointer barriers are horizontal
+        or vertical lines that should trigger the start of input capture when the cursor moves
+        across the pointer barrier. In the future,
+        when the compositor has deemed the pointer barrier to be crossed, it may
+        complete the org.freedesktop.portal.CaptureInput.Enable() request and input events
+        (from compositor-determined input devices) are sent to the application
+        via the transport layer.
+
+        Note that unlike the X11 XFixes PointerBarriers, these pointer barriers do not
+        block movement of the cursor.
+
+        Pointer barriers are situated on the top or left of their respective pixels and a
+        pointer barrier must be within or at the extent of the available
+        region. For example, a region of 1920x1080 at offset 0,0 allows
+        a pointer barrier at x1=1920, y1=0, x2=1920, y2=1080.
+        A pointer barrier at the extent of a region is considered triggered
+        when the pointer would logically move off that region, even if the
+        actual cusor movement is clipped to the region.
+
+        A zero-sized array of pointer barriers removes all existing pointer barriers
+        for this session. Setting pointer barriers immediately suspends the
+        current session and the application must call Enable() after this method.
+
+        Supported keys in the @options vardict include:
+        <variablelist>
+          <varlistentry>
+            <term>handle_token s</term>
+            <listitem><para>
+              A string that will be used as the last element of the @handle. Must be a valid
+              object path element. See the #org.freedesktop.portal.Request documentation for
+              more information about the @handle.
+            </para></listitem>
+          </varlistentry>
+        </variablelist>
+
+        Supported keys in the @barriers vardicts include:
+        <variablelist>
+          <varlistentry>
+            <term>position iiii</term>
+            <listitem><para>
+              The x1/y1 x2/y2 position of the pointer barrier. A horizontal
+              pointer barrier must have y1 == y2, a vertical pointer barrier
+              must have x1 == x2. Diagonal pointer barriers are not supported.
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>direction i</term>
+            <listitem><para>
+                The directional movement to trigger the pointer barrier. A
+                negative integer implies the pointer barrier triggers on negative
+                movement across the pointer barrier (e.g. "up"
+                for a horizontal barrier), a positive integer implies the
+                pointer barrier triggers on positive movement across
+                the pointer barrier (e.g. "right" for a vertical barrier).
+                A direction of zero triggers the barrier in either direction.
+            </para></listitem>
+          </varlistentry>
+        </variablelist>
+
+        The following results get returned via the #org.freedesktop.portal.Request::Response signal:
+        <variablelist>
+          <varlistentry>
+            <term>failed_barriers au</term>
+            <listitem><para>
+              An array of indices of pointer barriers that have been denied. The
+              indices match the indices of the entries in the @barriers argument.
+            </para></listitem>
+          </varlistentry>
+        </variablelist>
+    -->
+    <method name="SetPointerBarriers">
+      <arg type="o" name="session_handle" direction="in"/>
+      <arg type="a{sv}" name="options" direction="in"/>
+      <arg type="aa{sv}" name="barriers" direction="in"/>
+      <arg type="o" name="handle" direction="out"/>
+    </method>
+
+    <!--
+        Enable:
+        @session_handle: Object path for the #org.freedesktop.portal.Session object
+        @options: Vardict with optional further information
+
+        Enable input capturing. This does not immediately trigger capture, it
+        merely enables the capturing to be triggered at some future point
+        (e.g. by the cursor moving across a barrier). If and when that happens,
+        the Request object triggers the #org.freedesktop.portal.Request::Response
+        signal.
+
+        Supported keys in the @options vardict include:
+        <variablelist>
+          <varlistentry>
+            <term>handle_token s</term>
+            <listitem><para>
+              A string that will be used as the last element of the @handle. Must be a valid
+              object path element. See the #org.freedesktop.portal.Request documentation for
+              more information about the @handle.
+            </para></listitem>
+          </varlistentry>
+        </variablelist>
+
+        The following results get returned via the #org.freedesktop.portal.Request::Response signal:
+        <variablelist>
+          <varlistentry>
+            <term>serial u</term>
+            <listitem><para>
+                A serial number that can be used to synchronize with any
+                side-channels. This serial number has no intrinsic meaning but
+                is guaranteed to increase by an unspecified amount on each call.
+
+                Applications must be able to handle the serial number wrapping
+                around. Implementations of this portal must to increase the
+                serial number by an sensible amount to allow for wrapping detection.
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>cursor_position ii</term>
+            <listitem><para>
+              The current cursor position. Note that this position may be
+              outside the Regions available to this session - this indicates
+              movement larger than a single pixel.
+
+              For example, a fast movement against a barrier on the right edge
+              of a screen may logically put the cursor dozens of pixels into
+              the (non-existing) screen on the other side of the barrier.
+              It is the application's responsibility to adjust the cursor
+              position as necessary.
+            </para></listitem>
+          </varlistentry>
+        </variablelist>
+    -->
+    <method name="Enable">
+      <arg type="o" name="session_handle" direction="in"/>
+      <arg type="a{sv}" name="options" direction="in"/>
+    </method>
+
+    <!--
+        Disable:
+        @session_handle: Object path for the #org.freedesktop.portal.Session object
+        @options: Vardict with optional further information
+
+        Disable input capturing. Any ongoing capturing will be stopped immediately and
+        input events will not be captured until a subsequent
+        org.freedesktop.portal.CaptureInput.Enable() call.
+
+        Supported keys in the @options vardict include:
+        <variablelist>
+          <varlistentry>
+            <term>cursor_position ii</term>
+            <listitem><para>
+              The suggested cursor position within the Regions available in this session.
+
+              This is a suggestion to the compositor to place the cursor in
+              the correct position to allow for fluent movement between virtual screens.
+              The compositor is not required to honor this suggestion.
+            </para></listitem>
+          </varlistentry>
+        </variablelist>
+
+    -->
+    <method name="Disable">
+      <arg type="o" name="session_handle" direction="in"/>
+      <arg type="a{sv}" name="options" direction="in"/>
+    </method>
+
+    <!--
+        ConnectToEIS:
+        @session_handle: Object path for the #org.freedesktop.portal.Session object
+        @options: Vardict with optional further information
+        @fd: A file descriptor to an active EIS implementation that can be passed to a passive libei context
+
+        Set up the connection to an active EIS implementation. Once input capturing starts,
+        input events are sent via the EI protocol between the compositor and the application.
+        This call must be invoked before org.freedesktop.portal.CaptureInput.Enable().
+
+        A session only needs to set this up once, the EIS implementation is not affected by
+        calls to Disable() and org.freedesktop.portal.CaptureInput.Enable() -
+        the same context can be re-used until the session is closed.
+    -->
+    <method name="ConnectToEIS">
+      <arg type="o" name="session_handle" direction="in"/>
+      <arg type="a{sv}" name="options" direction="in"/>
+      <arg type="h" name="fd" direction="out"/>
+    </method>
+
+    <!--
+        Disabled:
+        @session_handle: Object path for the #org.freedesktop.portal.Session object
+        @options: Vardict with optional further information
+
+        The Disabled signal is emitted when the application will no longer
+        receive captured input. Any currently ongoing capturing is terminated
+        immediately and pointer barriers or other means of starting input
+        capturing will no longer trigger.
+
+        Applications must call org.freedesktop.portal.CaptureInput.Enable() to
+        request future input capturing for this session.
+
+        This signal may be sent when the application is already in a suspended
+        state.
+    -->
+    <signal name="Disabled">
+      <arg type="o" name="session_handle" direction="out"/>
+      <arg type="a{sv}" name="options" direction="in"/>
+    </signal>
+
+    <!--
+        RegionsChanged:
+        @session_handle: Object path for the #org.freedesktop.portal.Session object
+        @options: Vardict with optional further information
+
+        The RegionsChanged signal is emitted when one or more of the regions
+        available **to this session** change. An application should immediately call
+        org.freedesktop.portal.CaptureInput.GetRegions() to update its state of the regions.
+    -->
+    <signal name="RegionsChanged">
+      <arg type="o" name="session_handle" direction="out"/>
+      <arg type="a{sv}" name="options" direction="in"/>
+    </signal>
+
+    <!--
+        AvailableCapabilities:
+
+        A bitmask of available capabilities. Currently defined types are:
+
+        <simplelist>
+          <member>1: RELATIVE_POINTER</member>
+          <member>2: ABSOLUTE_POINTER</member>
+          <member>4: KEYBOARD</member>
+          <member>8: TOUCH</member>
+        </simplelist>
+    -->
+    <property name="AvailableCapabilities" type="u" access="read"/>
+    <property name="version" type="u" access="read"/>
+  </interface>
+</node>

@@ -2,6 +2,7 @@ PORTAL_IFACE_FILES =\
 	$(top_srcdir)/data/org.freedesktop.portal.Account.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.Background.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.Camera.xml \
+	$(top_srcdir)/data/org.freedesktop.portal.CaptureInput.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.Device.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.Documents.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.DynamicLauncher.xml \
