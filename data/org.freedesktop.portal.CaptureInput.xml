@@ -24,11 +24,18 @@
       @short_description: Portal for permitting input capture
 
       The CaptureInput portal allows capture input events from connected
-      physical or logical devices. Once capturing is activated by the
-      compositor, events from physical or logical devices are sent directly to
-      the application instead of using those events to update the pointer
-      position on-screen. The compositor is in control of the input capturing
-      and may filter events and/or terminate the capturing at any time.
+      physical or logical devices. Capturing input has two distinct states:
+      "enabled" where an application has requested that input should be captured
+      once certain conditions are met (but no input events are being delivered
+      yet) and "active", when input events are being delivered to the application.
+      An application can only control the "enabled" state, the compositor decides
+      when to switch into the "active" state - and which devices to capture.
+
+      Once capturing active by the compositor, events from physical or
+      logical devices are sent directly to the application instead of using
+      those events to update the pointer position on-screen. The compositor
+      is in control of the input capturing and may filter events and/or stop
+      capturing at any time.
 
       Input capturing is an asynchronous operation using "triggers". An
       application sets up a number of triggers but it is the compositor who
@@ -37,7 +44,7 @@
       that should trigger when the cursor moves across those lines.
       See org.freedesktop.portal.CaptureInput.SetPointerBarriers().
 
-      There is currently no way for an application to request immediate input
+      There is currently no way for an application to activate immediate input
       capture.
 
       The CaptureInput portal merely *manages* the logic when input should be
