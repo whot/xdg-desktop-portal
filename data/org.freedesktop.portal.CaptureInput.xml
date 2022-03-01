@@ -50,7 +50,7 @@
     <!--
         CreateSession:
         @options: Vardict with optional further information
-        @capabilities: Bitmask of requested capabilities, see the AvailableCapabilities property
+        @capabilities: Bitmask of requested capabilities, see the SupportedCapabilities property
         @handle: Object path for the #org.freedesktop.portal.Request object representing this call
 
         Create a capture input session. A successfully created session can at
@@ -93,10 +93,14 @@
             <listitem><para>
               The capabilities available to this session. This is always a
               subset of the requested capabilities.
-              See the AvailableCapabilities property for details. Note that
+              See the SupportedCapabilities property for details. Note that
               while a capability may be available to a session, there is no
-              guarantee a device with that capability will trigger input
-              capture.
+              guarantee a device with that capability is currently available
+              or if one does become available that it will trigger input capture.
+
+              It is best to view this set as a negative confirmation - a
+              capability that was requested but is missing is an indication that
+              this application may not capture events of that capability.
             </para></listitem>
           </varlistentry>
         </variablelist>
@@ -359,9 +363,15 @@
     </signal>
 
     <!--
-        AvailableCapabilities:
+        SupportedCapabilities:
 
-        A bitmask of available capabilities. Currently defined types are:
+        A bitmask of supported capabilities. This list is constant, it is not the list of
+        capabilities currently available but rather which capabilies are
+        implemented by the portal.
+
+        Applications must ignore unknown capabilities.
+
+        Currently defined types are:
 
         <simplelist>
           <member>1: RELATIVE_POINTER</member>
@@ -370,7 +380,7 @@
           <member>8: TOUCH</member>
         </simplelist>
     -->
-    <property name="AvailableCapabilities" type="u" access="read"/>
+    <property name="SupportedCapabilities" type="u" access="read"/>
     <property name="version" type="u" access="read"/>
   </interface>
 </node>
