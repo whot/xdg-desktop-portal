@@ -122,7 +122,7 @@
         GetRegions:
         @session_handle: Object path for the #org.freedesktop.portal.Session object
         @options: Vardict with optional further information
-        @regions: An array of 4 integers, each specifying a region's width, height and x/y offset.
+        @regions: An array of 4 integers, each specifying a region's width, height, x/y offset and physical scale
 
         Retrieve the available input regions for this session.
         The regions may not be continuous and may be a logical representation
@@ -136,11 +136,24 @@
         Note that regions are session-specific, there is no guarantee that two
         applications see the same screen regions. An empty region list implies
         that no pointer barriers can be set.
+
+        The physical scale by default is 1.0, or the proportion of
+        logical:physical size of the screen. This is required on systems that
+        do not have support for high-resolution displays but employ a mix of
+        high- and low-resolution displays.
+
+        For example, two 24 inch monitors, one 2k and one 4k are the same
+        physical size but the resolution on the 4k display is double
+        that of the 2k display. A cursor movement on the 2k screen covers N
+        pixels but that same physical cursor movement on the 4k display covers
+        2*N pixels. Likewise, a pointer barrier extending to the height of the
+        4k screen needs to be half as tall (in pixels) as that on the 2k screen
+        despite being the same physical size.
     -->
     <method name="GetRegions">
       <arg type="o" name="session_handle" direction="in"/>
       <arg type="a{sv}" name="options" direction="in"/>
-      <arg type="a(uuii)" name="regions" direction="out"/>
+      <arg type="a(uuiid)" name="regions" direction="out"/>
     </method>
 
     <!--
