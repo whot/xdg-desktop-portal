@@ -127,7 +127,7 @@
         GetRegions:
         @session_handle: Object path for the #org.freedesktop.portal.Session object
         @options: Vardict with optional further information
-        @regions: An array of 4 integers, each specifying a region's width, height, x/y offset and physical scale
+        @handle: Object path for the #org.freedesktop.portal.Request object representing this call
 
         Retrieve the available input regions for this session.
         The regions may not be continuous and may be a logical representation
@@ -154,11 +154,22 @@
         2*N pixels. Likewise, a pointer barrier extending to the height of the
         4k screen needs to be half as tall (in pixels) as that on the 2k screen
         despite being the same physical size.
+
+        The following results get returned via the #org.freedesktop.portal.Request::Response signal:
+        <variablelist>
+          <varlistentry>
+            <term>regions a(uuiid)</term>
+            <listitem><para>
+              An array of retions, each specifying that region's width,
+              height, x/y offset and physical scale.
+            </para></listitem>
+          </varlistentry>
+        </variablelist>
     -->
     <method name="GetRegions">
       <arg type="o" name="session_handle" direction="in"/>
       <arg type="a{sv}" name="options" direction="in"/>
-      <arg type="a(uuiid)" name="regions" direction="out"/>
+      <arg type="o" name="handle" direction="out"/>
     </method>
 
     <!--
