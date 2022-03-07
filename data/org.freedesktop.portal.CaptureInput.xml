@@ -57,7 +57,6 @@
     <!--
         CreateSession:
         @options: Vardict with optional further information
-        @capabilities: Bitmask of requested capabilities, see the SupportedCapabilities property
         @handle: Object path for the #org.freedesktop.portal.Request object representing this call
 
         Create a capture input session. A successfully created session can at
@@ -81,6 +80,13 @@
               A string that will be used as the last element of the session handle. Must be a valid
               object path element. See the #org.freedesktop.portal.Session documentation for
               more information about the session handle.
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>capabilities u</term>
+            <listitem><para>
+              Bitmask of requested capabilities, see the SupportedCapabilities property. Omitting
+              this key is equivalent to requesting all available capabilities.
             </para></listitem>
           </varlistentry>
         </variablelist>
@@ -114,7 +120,6 @@
     -->
     <method name="CreateSession">
       <arg type="a{sv}" name="options" direction="in"/>
-      <arg type="u" name="capabilities" direction="in"/>
       <arg type="o" name="handle" direction="out"/>
     </method>
 
