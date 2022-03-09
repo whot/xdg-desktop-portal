@@ -85,8 +85,8 @@
           <varlistentry>
             <term>capabilities u</term>
             <listitem><para>
-              Bitmask of requested capabilities, see the SupportedCapabilities property. Omitting
-              this key is equivalent to requesting all available capabilities.
+              Bitmask of requested capabilities, see the
+              SupportedCapabilities property. This value is required.
             </para></listitem>
           </varlistentry>
         </variablelist>
