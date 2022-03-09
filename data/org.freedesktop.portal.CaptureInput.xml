@@ -159,6 +159,13 @@
         on the 2k screen has the same physical extent as a pointer barrier of
         2*N pixels on the 4k screen.
 
+        Whenever the application requests the current regions, a unique serial
+        number is returned that references this set of regions. To establish
+        a pointer barrier, the application must pass this serial to
+        org.freedesktop.portal.CaptureInput.SetPointerBarriers(). A serial mismatch
+        implies the application is not using the current region set and
+        pointer barriers will fail.
+
         The following results get returned via the #org.freedesktop.portal.Request::Response signal:
         <variablelist>
           <varlistentry>
@@ -166,6 +173,19 @@
             <listitem><para>
               An array of retions, each specifying that region's width,
               height, x/y offset and physical scale.
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>serial u</term>
+            <listitem><para>
+             A serial number to be used in the
+             org.freedesktop.portal.CaptureInput.SetPointerBarriers() method to refer to
+             this set of regions. This serial increases by an unspecified
+             amount whenever the regions change and pointer barriers can only be set up
+             if the serial matches the most recent retured serial.
+
+             Note that this serial has no relation to the serial in
+             org.freedesktop.portal.CaptureInput.Enable()
             </para></listitem>
           </varlistentry>
         </variablelist>
@@ -181,6 +201,7 @@
         @session_handle: Object path for the #org.freedesktop.portal.Session object
         @options: Vardict with optional further information
         @barriers: An array of vardicts, each specifying one barrier
+        @serial: A unique serial number referring to the region  set
         @handle: Object path for the #org.freedesktop.portal.Request object representing this call
 
         Set up zero or more pointer barriers. Pointer barriers are horizontal
@@ -205,6 +226,11 @@
         A zero-sized array of pointer barriers removes all existing pointer barriers
         for this session. Setting pointer barriers immediately suspends the
         current session and the application must call Enable() after this method.
+
+        The @serial must be equivalent to the last returned serial number of the
+        org.freedesktop.portal.CpatureInput.GetRegions() method. A serial mismatch
+        implies the application is not using the current region set and
+        pointer barriers will fail.
 
         Supported keys in the @options vardict include:
         <variablelist>
@@ -257,6 +283,7 @@
       <arg type="o" name="session_handle" direction="in"/>
       <arg type="a{sv}" name="options" direction="in"/>
       <arg type="aa{sv}" name="barriers" direction="in"/>
+      <arg type="u" name="serial" direction="in"/>
       <arg type="o" name="handle" direction="out"/>
     </method>
 
