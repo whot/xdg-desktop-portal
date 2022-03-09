@@ -142,18 +142,22 @@
         applications see the same screen regions. An empty region list implies
         that no pointer barriers can be set.
 
-        The physical scale by default is 1.0, or the proportion of
-        logical:physical size of the screen. This is required on systems that
+        The physical scale indicates the factor relative motion should be
+        multiplied with to achieve the intended physical movement of the
+        cursor on this region. This is required on systems that
         do not have support for high-resolution displays but employ a mix of
         high- and low-resolution displays.
 
         For example, two 24 inch monitors, one 2k and one 4k are the same
         physical size but the resolution on the 4k display is double
-        that of the 2k display. A cursor movement on the 2k screen covers N
-        pixels but that same physical cursor movement on the 4k display covers
-        2*N pixels. Likewise, a pointer barrier extending to the height of the
-        4k screen needs to be half as tall (in pixels) as that on the 2k screen
-        despite being the same physical size.
+        that of the 2k display. A cursor movement of N pixels on the 2k screen
+        covers twice the physical distance as it would on the 4k screen. To
+        achive the same physical cursor movement, the delta must be multiplied
+        by a factor 2 on the 4k screen.
+
+        The same factor applies to pointer barriers: a pointer barrier of N pixels
+        on the 2k screen has the same physical extent as a pointer barrier of
+        2*N pixels on the 4k screen.
 
         The following results get returned via the #org.freedesktop.portal.Request::Response signal:
         <variablelist>
@@ -284,9 +288,15 @@
           <varlistentry>
             <term>serial u</term>
             <listitem><para>
-                A serial number that can be used to synchronize with any
-                side-channels. This serial number has no intrinsic meaning but
+                A serial number that can be used to synchronize with the
+                transport-layer. This serial number has no intrinsic meaning but
                 is guaranteed to increase by an unspecified amount on each call.
+
+                In particular: if the compositor sends a serial of N as part
+                of this request it will also send the same serial N through the
+                EIS connection before the first event from a device is sent.
+                This allows an application to have a synchronization point and
+                attribute an event sequence to the portal interaction.
 
                 Applications must be able to handle the serial number wrapping
                 around. Implementations of this portal must to increase the
