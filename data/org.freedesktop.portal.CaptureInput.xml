@@ -142,23 +142,6 @@
         applications see the same screen regions. An empty region list implies
         that no pointer barriers can be set.
 
-        The physical scale indicates the factor relative motion should be
-        multiplied with to achieve the intended physical movement of the
-        cursor on this region. This is required on systems that
-        do not have support for high-resolution displays but employ a mix of
-        high- and low-resolution displays.
-
-        For example, two 24 inch monitors, one 2k and one 4k are the same
-        physical size but the resolution on the 4k display is double
-        that of the 2k display. A cursor movement of N pixels on the 2k screen
-        covers twice the physical distance as it would on the 4k screen. To
-        achive the same physical cursor movement, the delta must be multiplied
-        by a factor 2 on the 4k screen.
-
-        The same factor applies to pointer barriers: a pointer barrier of N pixels
-        on the 2k screen has the same physical extent as a pointer barrier of
-        2*N pixels on the 4k screen.
-
         Whenever the application requests the current regions, a unique serial
         number is returned that references this set of regions. To establish
         a pointer barrier, the application must pass this serial to
@@ -169,10 +152,10 @@
         The following results get returned via the #org.freedesktop.portal.Request::Response signal:
         <variablelist>
           <varlistentry>
-            <term>regions a(uuiid)</term>
+            <term>regions a(uuii)</term>
             <listitem><para>
               An array of retions, each specifying that region's width,
-              height, x/y offset and physical scale.
+              height, x/y offset.
             </para></listitem>
           </varlistentry>
           <varlistentry>
