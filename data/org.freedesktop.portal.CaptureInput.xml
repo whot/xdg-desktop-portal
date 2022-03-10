@@ -124,37 +124,40 @@
     </method>
 
     <!--
-        GetRegions:
+        GetZones:
         @session_handle: Object path for the #org.freedesktop.portal.Session object
         @options: Vardict with optional further information
         @handle: Object path for the #org.freedesktop.portal.Request object representing this call
 
-        Retrieve the available input regions for this session.
-        The regions may not be continuous and may be a logical representation
+        Retrieve the available input zones for this session. The zones may not
+        be continuous and may be a logical representation
         of the physical screens (e.g. a 4k screen may be represented as
         low-resolution screen instead).
 
-        If the regions change (e.g. a monitor is unplugged), the
-        #org.freedesktop.portal.CaptureInput::RegionsChanged signal is emitted
-        and the application should re-request the current regions to update its internal state.
+        The name "Zone" was chosen to provide distinction with the libei
+        "Region".
 
-        Note that regions are session-specific, there is no guarantee that two
-        applications see the same screen regions. An empty region list implies
+        If the zones change (e.g. a monitor is unplugged), the
+        #org.freedesktop.portal.CaptureInput::ZonesChanged signal is emitted
+        and the application should re-request the current zones to update its internal state.
+
+        Note that zones are session-specific, there is no guarantee that two
+        applications see the same screen zones. An empty zone list implies
         that no pointer barriers can be set.
 
-        Whenever the application requests the current regions, a unique serial
-        number is returned that references this set of regions. To establish
+        Whenever the application requests the current zones, a unique serial
+        number is returned that references this set of zones. To establish
         a pointer barrier, the application must pass this serial to
         org.freedesktop.portal.CaptureInput.SetPointerBarriers(). A serial mismatch
-        implies the application is not using the current region set and
+        implies the application is not using the current zone set and
         pointer barriers will fail.
 
         The following results get returned via the #org.freedesktop.portal.Request::Response signal:
         <variablelist>
           <varlistentry>
-            <term>regions a(uuii)</term>
+            <term>zones a(uuii)</term>
             <listitem><para>
-              An array of retions, each specifying that region's width,
+              An array of retions, each specifying that zone's width,
               height, x/y offset.
             </para></listitem>
           </varlistentry>
@@ -163,8 +166,8 @@
             <listitem><para>
              A serial number to be used in the
              org.freedesktop.portal.CaptureInput.SetPointerBarriers() method to refer to
-             this set of regions. This serial increases by an unspecified
-             amount whenever the regions change and pointer barriers can only be set up
+             this set of zones. This serial increases by an unspecified
+             amount whenever the zones change and pointer barriers can only be set up
              if the serial matches the most recent retured serial.
 
              Note that this serial has no relation to the serial in
@@ -173,7 +176,7 @@
           </varlistentry>
         </variablelist>
     -->
-    <method name="GetRegions">
+    <method name="GetZones">
       <arg type="o" name="session_handle" direction="in"/>
       <arg type="a{sv}" name="options" direction="in"/>
       <arg type="o" name="handle" direction="out"/>
@@ -184,7 +187,7 @@
         @session_handle: Object path for the #org.freedesktop.portal.Session object
         @options: Vardict with optional further information
         @barriers: An array of vardicts, each specifying one barrier
-        @serial: A unique serial number referring to the region  set
+        @serial: A unique serial number referring to the zone  set
         @handle: Object path for the #org.freedesktop.portal.Request object representing this call
 
         Set up zero or more pointer barriers. Pointer barriers are horizontal
@@ -200,19 +203,19 @@
 
         Pointer barriers are situated on the top or left of their respective pixels and a
         pointer barrier must be within or at the extent of the available
-        region. For example, a region of 1920x1080 at offset 0,0 allows
+        zone. For example, a zone of 1920x1080 at offset 0,0 allows
         a pointer barrier at x1=1920, y1=0, x2=1920, y2=1080.
-        A pointer barrier at the extent of a region is considered triggered
-        when the pointer would logically move off that region, even if the
-        actual cusor movement is clipped to the region.
+        A pointer barrier at the extent of a zone is considered triggered
+        when the pointer would logically move off that zone, even if the
+        actual cusor movement is clipped to the zone.
 
         A zero-sized array of pointer barriers removes all existing pointer barriers
         for this session. Setting pointer barriers immediately suspends the
         current session and the application must call Enable() after this method.
 
         The @serial must be equivalent to the last returned serial number of the
-        org.freedesktop.portal.CpatureInput.GetRegions() method. A serial mismatch
-        implies the application is not using the current region set and
+        org.freedesktop.portal.CpatureInput.GetZones() method. A serial mismatch
+        implies the application is not using the current zone set and
         pointer barriers will fail.
 
         Supported keys in the @options vardict include:
@@ -331,7 +334,7 @@
           <varlistentry>
             <term>cursor_position ii</term>
             <listitem><para>
-              The suggested cursor position within the Regions available in
+              The suggested cursor position within the Zones available in
               this session.
 
               This is a suggestion to the compositor to place the cursor in
@@ -419,7 +422,7 @@
             <term>cursor_position ii</term>
             <listitem><para>
               The current cursor position. Note that this position may be
-              outside the Regions available to this session - this indicates
+              outside the Zones available to this session - this indicates
               movement larger than a single pixel.
 
               For example, a fast movement against a barrier on the right edge
@@ -458,7 +461,7 @@
             <term>cursor_position ii</term>
             <listitem><para>
               The current cursor position. Note that this position may be
-              outside the Regions available to this session - this indicates
+              outside the Zones available to this session - this indicates
               movement larger than a single pixel.
 
               For example, a fast movement against a barrier on the right edge
@@ -476,15 +479,15 @@
     </signal>
 
     <!--
-        RegionsChanged:
+        ZonesChanged:
         @session_handle: Object path for the #org.freedesktop.portal.Session object
         @options: Vardict with optional further information
 
-        The RegionsChanged signal is emitted when one or more of the regions
+        The ZonesChanged signal is emitted when one or more of the zones
         available **to this session** change. An application should immediately call
-        org.freedesktop.portal.CaptureInput.GetRegions() to update its state of the regions.
+        org.freedesktop.portal.CaptureInput.GetZones() to update its state of the zones.
     -->
-    <signal name="RegionsChanged">
+    <signal name="ZonesChanged">
       <arg type="o" name="session_handle" direction="out"/>
       <arg type="a{sv}" name="options" direction="in"/>
     </signal>
