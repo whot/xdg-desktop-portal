@@ -408,8 +408,9 @@
                 is guaranteed to increase by an unspecified amount on each call.
 
                 In particular: if the compositor sends a serial of N as part
-                of this request it will also send the same serial N through the
-                EIS connection before the first event from a device is sent.
+                of this request it will also set the
+                org.freedesktop.portal.CaptureInput.serial property to the same value N
+                on the EIS connection before the first event from a device is sent.
                 This allows an application to have a synchronization point and
                 attribute an event sequence to the portal interaction.
 
