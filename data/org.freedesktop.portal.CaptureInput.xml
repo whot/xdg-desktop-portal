@@ -285,6 +285,7 @@
         Enable:
         @session_handle: Object path for the #org.freedesktop.portal.Session object
         @options: Vardict with optional further information
+        @handle: Object path for the #org.freedesktop.portal.Request object representing this call
 
         Enable input capturing. This does not immediately trigger capture, it
         merely enables the capturing to be triggered at some future point
@@ -306,12 +307,14 @@
     <method name="Enable">
       <arg type="o" name="session_handle" direction="in"/>
       <arg type="a{sv}" name="options" direction="in"/>
+      <arg type="o" name="handle" direction="out"/>
     </method>
 
     <!--
         Disable:
         @session_handle: Object path for the #org.freedesktop.portal.Session object
         @options: Vardict with optional further information
+        @handle: Object path for the #org.freedesktop.portal.Request object representing this call
 
         Disable input capturing and emit the
         #org.freedesktop.portal.CaptureInput::Disabled signal.
@@ -327,12 +330,14 @@
     <method name="Disable">
       <arg type="o" name="session_handle" direction="in"/>
       <arg type="a{sv}" name="options" direction="in"/>
+      <arg type="o" name="handle" direction="out"/>
     </method>
 
     <!--
         Release:
         @session_handle: Object path for the #org.freedesktop.portal.Session object
         @options: Vardict with optional further information
+        @handle: Object path for the #org.freedesktop.portal.Request object representing this call
 
         Release any ongoing input capture and emit the
         #org.freedesktop.portal.CaptureInput::Deactivated signal.
@@ -355,6 +360,7 @@
     <method name="Release">
       <arg type="o" name="session_handle" direction="in"/>
       <arg type="a{sv}" name="options" direction="in"/>
+      <arg type="o" name="handle" direction="out"/>
     </method>
 
     <!--
