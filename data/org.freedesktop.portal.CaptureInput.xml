@@ -233,6 +233,14 @@
         Supported keys in the @barriers vardicts include:
         <variablelist>
           <varlistentry>
+            <term>barrier-id u</term>
+            <listitem><para>
+              The non-zero id of this barrier. This id is used in the
+              #org.freedesktop.portal.CaptureInput::Activated signal to inform
+              which barrier triggered input capture.
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
             <term>position iiii</term>
             <listitem><para>
               The x1/y1 x2/y2 position of the pointer barrier. A horizontal
@@ -259,8 +267,8 @@
           <varlistentry>
             <term>failed_barriers au</term>
             <listitem><para>
-              An array of indices of pointer barriers that have been denied. The
-              indices match the indices of the entries in the @barriers argument.
+              An array of barrier-ids of pointer barriers that have been denied. The
+              id matches the barrier-id of the entries in the @barriers argument.
             </para></listitem>
           </varlistentry>
         </variablelist>
@@ -431,6 +439,22 @@
               the (non-existing) screen on the other side of the barrier.
               It is the application's responsibility to adjust the cursor
               position as necessary.
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>barrier-id u</term>
+            <listitem><para>
+              The barrier id of the barrier that triggered. If the value is
+              nonzero, it matches the barrier id as specified in
+              org.freedesktop.portal.CaptureInput.SetPointerBarriers().
+
+              If the id is zero, the pointer barrier could be determined.
+              If the id is missing, the input capture was not triggered by a
+              pointer barrier.
+
+              Where more than one pointer barrier are triggered by the same
+              movement it is up to the compositor to choose one barrier (or use
+              a barrier id of zero).
             </para></listitem>
           </varlistentry>
         </variablelist>
