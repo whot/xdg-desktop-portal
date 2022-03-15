@@ -40,6 +40,7 @@ PORTAL_IMPL_IFACE_FILES =\
 	$(top_srcdir)/data/org.freedesktop.impl.portal.Email.xml \
 	$(top_srcdir)/data/org.freedesktop.impl.portal.FileChooser.xml \
 	$(top_srcdir)/data/org.freedesktop.impl.portal.Inhibit.xml \
+	$(top_srcdir)/data/org.freedesktop.impl.portal.InputCapture.xml \
 	$(top_srcdir)/data/org.freedesktop.impl.portal.Lockdown.xml \
 	$(top_srcdir)/data/org.freedesktop.impl.portal.Notification.xml \
 	$(top_srcdir)/data/org.freedesktop.impl.portal.PermissionStore.xml \
