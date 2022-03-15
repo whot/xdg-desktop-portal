@@ -2,7 +2,6 @@ PORTAL_IFACE_FILES =\
 	$(top_srcdir)/data/org.freedesktop.portal.Account.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.Background.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.Camera.xml \
-	$(top_srcdir)/data/org.freedesktop.portal.CaptureInput.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.Device.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.Documents.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.DynamicLauncher.xml \
@@ -11,6 +10,7 @@ PORTAL_IFACE_FILES =\
 	$(top_srcdir)/data/org.freedesktop.portal.FileTransfer.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.GameMode.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.Inhibit.xml \
+	$(top_srcdir)/data/org.freedesktop.portal.InputCapture.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.Location.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.MemoryMonitor.xml \
 	$(top_srcdir)/data/org.freedesktop.portal.NetworkMonitor.xml \

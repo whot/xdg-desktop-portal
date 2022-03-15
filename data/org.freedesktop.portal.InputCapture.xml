@@ -20,10 +20,10 @@
 
 <node name="/" xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
   <!--
-      org.freedesktop.portal.CaptureInput:
+      org.freedesktop.portal.InputCapture:
       @short_description: Portal for permitting input capture
 
-      The CaptureInput portal allows capture input events from connected
+      The InputCapture portal allows capture input events from connected
       physical or logical devices. Capturing input has two distinct states:
       "enabled" where an application has requested that input should be captured
       once certain conditions are met (but no input events are being delivered
@@ -42,18 +42,18 @@
       decides when the trigger conditions are met. Currently, the only defined
       trigger are pointer barriers: horizontal or vertical "lines" on the screen
       that should trigger when the cursor moves across those lines.
-      See org.freedesktop.portal.CaptureInput.SetPointerBarriers().
+      See org.freedesktop.portal.InputCapture.SetPointerBarriers().
 
       There is currently no way for an application to activate immediate input
       capture.
 
-      The CaptureInput portal merely *manages* the logic when input should be
+      The InputCapture portal merely *manages* the logic when input should be
       captured. The transport of actual input events is delegated to a
-      transport layer, specifically libei. See org.freedesktop.portal.CaptureInput.ConnectToEIS().
+      transport layer, specifically libei. See org.freedesktop.portal.InputCapture.ConnectToEIS().
 
       This documentation describes version 1 of this interface.
    -->
-  <interface name="org.freedesktop.portal.CaptureInput">
+  <interface name="org.freedesktop.portal.InputCapture">
     <!--
         CreateSession:
         @options: Vardict with optional further information
@@ -138,7 +138,7 @@
         "Region".
 
         If the zones change (e.g. a monitor is unplugged), the
-        #org.freedesktop.portal.CaptureInput::ZonesChanged signal is emitted
+        #org.freedesktop.portal.InputCapture::ZonesChanged signal is emitted
         and the application should re-request the current zones to update its internal state.
 
         Note that zones are session-specific, there is no guarantee that two
@@ -148,7 +148,7 @@
         Whenever the application requests the current zones, a unique serial
         number is returned that references this set of zones. To establish
         a pointer barrier, the application must pass this serial to
-        org.freedesktop.portal.CaptureInput.SetPointerBarriers(). A serial mismatch
+        org.freedesktop.portal.InputCapture.SetPointerBarriers(). A serial mismatch
         implies the application is not using the current zone set and
         pointer barriers will fail.
 
@@ -165,13 +165,13 @@
             <term>serial u</term>
             <listitem><para>
              A serial number to be used in the
-             org.freedesktop.portal.CaptureInput.SetPointerBarriers() method to refer to
+             org.freedesktop.portal.InputCapture.SetPointerBarriers() method to refer to
              this set of zones. This serial increases by an unspecified
              amount whenever the zones change and pointer barriers can only be set up
              if the serial matches the most recent retured serial.
 
              Note that this serial has no relation to the serial in
-             org.freedesktop.portal.CaptureInput.Enable()
+             org.freedesktop.portal.InputCapture.Enable()
             </para></listitem>
           </varlistentry>
         </variablelist>
@@ -194,7 +194,7 @@
         or vertical lines that should trigger the start of input capture when the cursor moves
         across the pointer barrier. In the future,
         when the compositor has deemed the pointer barrier to be crossed, it may
-        complete the org.freedesktop.portal.CaptureInput.Enable() request and input events
+        complete the org.freedesktop.portal.InputCapture.Enable() request and input events
         (from compositor-determined input devices) are sent to the application
         via the transport layer.
 
@@ -236,7 +236,7 @@
             <term>barrier-id u</term>
             <listitem><para>
               The non-zero id of this barrier. This id is used in the
-              #org.freedesktop.portal.CaptureInput::Activated signal to inform
+              #org.freedesktop.portal.InputCapture::Activated signal to inform
               which barrier triggered input capture.
             </para></listitem>
           </varlistentry>
@@ -290,7 +290,7 @@
         Enable input capturing. This does not immediately trigger capture, it
         merely enables the capturing to be triggered at some future point
         (e.g. by the cursor moving across a barrier). If and when that happens,
-        the #org.freedesktop.portal.CaptureInput::Activated signal is emitted.
+        the #org.freedesktop.portal.InputCapture::Activated signal is emitted.
 
         Supported keys in the @options vardict include:
         <variablelist>
@@ -317,15 +317,15 @@
         @handle: Object path for the #org.freedesktop.portal.Request object representing this call
 
         Disable input capturing and emit the
-        #org.freedesktop.portal.CaptureInput::Disabled signal.
+        #org.freedesktop.portal.InputCapture::Disabled signal.
 
         If input capturing is currently ongoing, the
-        #org.freedesktop.portal.CaptureInput::Deactivated signal is
+        #org.freedesktop.portal.InputCapture::Deactivated signal is
         emitted prior to this signal. It is recommended that
-        applications call org.freedesktop.portal.CaptureInput.Release() first.
+        applications call org.freedesktop.portal.InputCapture.Release() first.
 
         Input events will not be captured until a subsequent
-        org.freedesktop.portal.CaptureInput.Enable() call.
+        org.freedesktop.portal.InputCapture.Enable() call.
     -->
     <method name="Disable">
       <arg type="o" name="session_handle" direction="in"/>
@@ -340,7 +340,7 @@
         @handle: Object path for the #org.freedesktop.portal.Request object representing this call
 
         Release any ongoing input capture and emit the
-        #org.freedesktop.portal.CaptureInput::Deactivated signal.
+        #org.freedesktop.portal.InputCapture::Deactivated signal.
 
         Supported keys in the @options vardict include:
         <variablelist>
@@ -371,10 +371,10 @@
 
         Set up the connection to an active EIS implementation. Once input capturing starts,
         input events are sent via the EI protocol between the compositor and the application.
-        This call must be invoked before org.freedesktop.portal.CaptureInput.Enable().
+        This call must be invoked before org.freedesktop.portal.InputCapture.Enable().
 
         A session only needs to set this up once, the EIS implementation is not affected by
-        calls to Disable() and org.freedesktop.portal.CaptureInput.Enable() -
+        calls to Disable() and org.freedesktop.portal.InputCapture.Enable() -
         the same context can be re-used until the session is closed.
     -->
     <method name="ConnectToEIS">
@@ -390,10 +390,10 @@
 
         The Disabled signal is emitted when the application will no longer
         receive captured input. If input capturing is currently ongoing, the
-        #org.freedesktop.portal.CaptureInput::Deactivated signal is emitted
+        #org.freedesktop.portal.InputCapture::Deactivated signal is emitted
         before this signal.
 
-        Applications must call org.freedesktop.portal.CaptureInput.Enable() to
+        Applications must call org.freedesktop.portal.InputCapture.Enable() to
         request future input capturing for this session.
     -->
     <signal name="Disabled">
@@ -410,7 +410,7 @@
         are about to be sent to the application.
 
         This signal is only emitted after a prior call
-        to org.freedesktop.portal.CaptureInput.Enable().
+        to org.freedesktop.portal.InputCapture.Enable().
 
         Supported keys in the @options vardict include:
         <variablelist>
@@ -423,7 +423,7 @@
 
                 In particular: if the compositor sends a serial of N as part
                 of this request it will also set the
-                org.freedesktop.portal.CaptureInput.serial property to the same value N
+                org.freedesktop.portal.InputCapture.serial property to the same value N
                 on the EIS connection before the first event from a device is sent.
                 This allows an application to have a synchronization point and
                 attribute an event sequence to the portal interaction.
@@ -452,7 +452,7 @@
             <listitem><para>
               The barrier id of the barrier that triggered. If the value is
               nonzero, it matches the barrier id as specified in
-              org.freedesktop.portal.CaptureInput.SetPointerBarriers().
+              org.freedesktop.portal.InputCapture.SetPointerBarriers().
 
               If the id is zero, the pointer barrier could be determined.
               If the id is missing, the input capture was not triggered by a
@@ -477,7 +477,7 @@
 
         The Deactivated signal is emitted when input capture stopped and input events
         are no longer sent to the application. To prevent future input
-        capture, an application must call org.freedesktop.portal.CaptureInput.Disable().
+        capture, an application must call org.freedesktop.portal.InputCapture.Disable().
 
         Supported keys in the @options vardict include:
         <variablelist>
@@ -485,7 +485,7 @@
             <term>serial u</term>
             <listitem><para>
                 The same serial number as in the corresponding
-                #org.freedesktop.portal.CaptureInput::Activated signal.
+                #org.freedesktop.portal.InputCapture::Activated signal.
             </para></listitem>
           </varlistentry>
           <varlistentry>
@@ -516,7 +516,7 @@
 
         The ZonesChanged signal is emitted when one or more of the zones
         available **to this session** change. An application should immediately call
-        org.freedesktop.portal.CaptureInput.GetZones() to update its state of the zones.
+        org.freedesktop.portal.InputCapture.GetZones() to update its state of the zones.
     -->
     <signal name="ZonesChanged">
       <arg type="o" name="session_handle" direction="out"/>
