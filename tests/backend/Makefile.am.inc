@@ -23,6 +23,8 @@ tests_test_backends_SOURCES = \
 	tests/backend/filechooser.h \
 	tests/backend/inhibit.c \
 	tests/backend/inhibit.h \
+	tests/backend/inputcapture.c \
+	tests/backend/inputcapture.h \
 	tests/backend/lockdown.c \
 	tests/backend/lockdown.h \
 	tests/backend/notification.c \
