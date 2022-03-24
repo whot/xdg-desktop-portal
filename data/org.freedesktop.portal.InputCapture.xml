@@ -202,12 +202,25 @@
         block movement of the cursor.
 
         Pointer barriers are situated on the top or left of their respective pixels and a
-        pointer barrier must be within or at the extent of the available
-        zone. For example, a zone of 1920x1080 at offset 0,0 allows
-        a pointer barrier at x1=1920, y1=0, x2=1920, y2=1080.
-        A pointer barrier at the extent of a zone is considered triggered
-        when the pointer would logically move off that zone, even if the
-        actual cusor movement is clipped to the zone.
+        pointer barrier must be situated at the outside boundary of the union of all zones.
+        A pointer barrier must be fully contained within one zone.
+
+        For example, consider two zones of size 1920x1080 with offsets
+        0,0 and 1920,0, respectively. (i.e. a left-right dual-monitor setup).
+        The following pointer barriers are permitted:
+
+        <itemizedlist>
+        <listitem><para>top edge of left screen: <literal>x1=0,y1=0,x2=1920,y1=0</literal></para></listitem>
+        <listitem><para>bottom edge of left screen: <literal>x1=0,y1=1080,x2=1920,y1=1080</literal></para></listitem>
+        <listitem><para>top edge of right screen: <literal>x1=1920,y1=0,x2=3840,y1=0</literal></para></listitem>
+        <listitem><para>bottom edge of right screen: <literal>x1=1920,y1=1080,x2=3840,y1=1080</literal></para></listitem>
+        <listitem><para>left edge of left screen: <literal>x1=0,y1=0,x2=0,y1=1920</literal></para></listitem>
+        <listitem><para>right edge of right screen: <literal>x1=3840,y1=0,x2=3840,y1=1920</literal></para></listitem>
+        </itemizedlist>
+
+        A pointer barrier is considered triggered when the pointer would
+        logically move off that zone, even if the actual cusor movement is
+        clipped to the zone.
 
         A zero-sized array of pointer barriers removes all existing pointer barriers
         for this session. Setting pointer barriers immediately suspends the
@@ -246,18 +259,6 @@
               The x1/y1 x2/y2 position of the pointer barrier. A horizontal
               pointer barrier must have y1 == y2, a vertical pointer barrier
               must have x1 == x2. Diagonal pointer barriers are not supported.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>direction i</term>
-            <listitem><para>
-                The directional movement to trigger the pointer barrier. A
-                negative integer implies the pointer barrier triggers on negative
-                movement across the pointer barrier (e.g. "up"
-                for a horizontal barrier), a positive integer implies the
-                pointer barrier triggers on positive movement across
-                the pointer barrier (e.g. "right" for a vertical barrier).
-                A direction of zero triggers the barrier in either direction.
             </para></listitem>
           </varlistentry>
         </variablelist>
