@@ -439,8 +439,9 @@
           <varlistentry>
             <term>cursor_position ii</term>
             <listitem><para>
-              The current cursor position. Note that this position may be
-              outside the Zones available to this session - this indicates
+              The current cursor position in the same coordinate space as
+              the Zones. Note that this position may be outside the Zones
+              available to this session - this indicates
               movement larger than a single pixel.
 
               For example, a fast movement against a barrier on the right edge
