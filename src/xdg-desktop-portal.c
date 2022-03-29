@@ -45,6 +45,7 @@
 #include "screenshot.h"
 #include "notification.h"
 #include "inhibit.h"
+#include "input-capture.h"
 #include "device.h"
 #include "account.h"
 #include "email.h"
@@ -342,6 +343,13 @@ on_bus_acquired (GDBusConnection *connection,
   if (implementation != NULL)
     export_portal_implementation (connection,
                                   remote_desktop_create (connection, implementation->dbus_name));
+#endif
+
+#ifdef HAVE_LIBEI
+  implementation = find_portal_implementation ("org.freedesktop.impl.portal.InputCapture");
+  if (implementation != NULL)
+    export_portal_implementation (connection,
+                                  input_capture_create (connection, implementation->dbus_name));
 #endif
 }
 

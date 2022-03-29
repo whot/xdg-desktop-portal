@@ -15,6 +15,7 @@
 #include "email.h"
 #include "filechooser.h"
 #include "inhibit.h"
+#include "inputcapture.h"
 #include "location.h"
 #include "notification.h"
 #include "openuri.h"
@@ -394,6 +395,17 @@ global_teardown (void)
    }
 #endif
 
+#ifdef HAVE_LIBEI
+#define check_libei(name)
+#else
+#define check_libei(name) \
+ if (strcmp (name , "inputcapture") == 0) \
+   { \
+     g_test_skip ("Skipping tests that require libei"); \
+     return; \
+   }
+#endif
+
 #define DEFINE_TEST_EXISTS(pp,PP,version) \
 static void \
 test_##pp##_exists (void) \
@@ -404,6 +416,7 @@ test_##pp##_exists (void) \
  \
  check_pipewire ( #pp ) \
  check_geoclue ( #pp ) \
+ check_libei ( #pp ) \
  \
   proxy = G_DBUS_PROXY (xdp_##pp##_proxy_new_sync (session_bus, \
                                                    0, \
@@ -426,6 +439,7 @@ DEFINE_TEST_EXISTS(email, EMAIL, 3)
 DEFINE_TEST_EXISTS(file_chooser, FILE_CHOOSER, 3)
 DEFINE_TEST_EXISTS(game_mode, GAME_MODE, 3)
 DEFINE_TEST_EXISTS(inhibit, INHIBIT, 3)
+DEFINE_TEST_EXISTS(input_capture, INPUT_CAPTURE, 1)
 DEFINE_TEST_EXISTS(location, LOCATION, 1)
 DEFINE_TEST_EXISTS(network_monitor, NETWORK_MONITOR, 3)
 DEFINE_TEST_EXISTS(notification, NOTIFICATION, 1)
@@ -454,6 +468,7 @@ main (int argc, char **argv)
   g_test_add_func ("/portal/filechooser/exists", test_file_chooser_exists);
   g_test_add_func ("/portal/gamemode/exists", test_game_mode_exists);
   g_test_add_func ("/portal/inhibit/exists", test_inhibit_exists);
+  g_test_add_func ("/portal/inputcapture/exists", test_input_capture_exists);
   g_test_add_func ("/portal/location/exists", test_location_exists);
   g_test_add_func ("/portal/networkmonitor/exists", test_network_monitor_exists);
   g_test_add_func ("/portal/notification/exists", test_notification_exists);
@@ -467,6 +482,8 @@ main (int argc, char **argv)
   g_test_add_func ("/portal/realtime/exists", test_realtime_exists);
 
 #ifdef HAVE_LIBPORTAL
+  g_test_add_func ("/portal/inputcapture/basic", test_inputcapture_basic);
+
   g_test_add_func ("/portal/account/basic", test_account_basic);
   g_test_add_func ("/portal/account/delay", test_account_delay);
   g_test_add_func ("/portal/account/cancel", test_account_cancel);

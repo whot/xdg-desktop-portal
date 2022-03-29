@@ -55,6 +55,8 @@ test_portals_SOURCES += \
 	tests/filechooser.h \
 	tests/inhibit.c \
 	tests/inhibit.h \
+	tests/inputcapture.c \
+	tests/inputcapture.h \
 	tests/location.c \
 	tests/location.h \
 	tests/notification.c \

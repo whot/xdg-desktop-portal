@@ -59,7 +59,7 @@ test_inputcapture_basic (void)
   portal = xdp_portal_new ();
 
   got_info = 0;
-  xdp_portal_create_input_capture_session (portal, XDP_CAPABILITY_POINTER_RELATIVE,
+  xdp_portal_create_input_capture_session (portal, NULL, XDP_CAPABILITY_POINTER_RELATIVE,
                                            NULL, input_capture_cb, keyfile);
 
   while (!got_info)

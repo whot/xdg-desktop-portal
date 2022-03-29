@@ -127,9 +127,11 @@ create_session_done (GObject *source_object,
   g_autoptr(Request) request = data;
   Session *session;
   guint response = 2;
+  GVariant *results;
   gboolean should_close_session;
   GVariantBuilder results_builder;
   g_autoptr(GError) error = NULL;
+  guint capabilities = 0;
 
   REQUEST_AUTOLOCK (request);
 
@@ -141,7 +143,7 @@ create_session_done (GObject *source_object,
 
   if (!xdp_impl_input_capture_call_create_session_finish (impl,
                                                         &response,
-                                                        NULL,
+                                                        &results,
                                                         res,
                                                         &error))
     {
@@ -163,14 +165,17 @@ create_session_done (GObject *source_object,
 
       should_close_session = FALSE;
       session_register (session);
+
+      g_variant_lookup (results, "capabilities", "u", &capabilities);
+      g_variant_builder_add (&results_builder, "{sv}",
+                            "capabilities", g_variant_new_uint32 (capabilities));
+      g_variant_builder_add (&results_builder, "{sv}",
+                             "session_handle", g_variant_new ("s", session->id));
     }
   else
     {
       should_close_session = TRUE;
     }
-
-  g_variant_builder_add (&results_builder, "{sv}",
-                         "session_handle", g_variant_new ("s", session->id));
 
 out:
   if (request->exported)
