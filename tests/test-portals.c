@@ -474,6 +474,7 @@ main (int argc, char **argv)
 
   g_test_init (&argc, &argv, NULL);
 
+#if 0
   g_test_add_func ("/portal/account/exists", test_account_exists);
   g_test_add_func ("/portal/background/exists", test_background_exists);
   g_test_add_func ("/portal/camera/exists", test_camera_exists);
@@ -493,10 +494,12 @@ main (int argc, char **argv)
   g_test_add_func ("/portal/trash/exists", test_trash_exists);
   g_test_add_func ("/portal/wallpaper/exists", test_wallpaper_exists);
   g_test_add_func ("/portal/realtime/exists", test_realtime_exists);
+#endif
 
 #ifdef HAVE_LIBPORTAL
   g_test_add_func ("/portal/inputcapture/basic", test_inputcapture_basic);
 
+#if 0
   g_test_add_func ("/portal/account/basic", test_account_basic);
   g_test_add_func ("/portal/account/delay", test_account_delay);
   g_test_add_func ("/portal/account/cancel", test_account_cancel);
@@ -610,6 +613,7 @@ main (int argc, char **argv)
   g_test_add_func ("/portal/notification/bad-arg", test_notification_bad_arg);
   g_test_add_func ("/portal/notification/bad-priority", test_notification_bad_priority);
   g_test_add_func ("/portal/notification/bad-button", test_notification_bad_button);
+#endif
 #endif
 
   global_setup ();
