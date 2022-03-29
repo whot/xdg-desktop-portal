@@ -307,6 +307,19 @@ global_setup (void)
 
   /* make sure errors are registered */
   portal_errors = XDG_DESKTOP_PORTAL_ERROR;
+
+  launcher = g_subprocess_launcher_new (G_SUBPROCESS_FLAGS_NONE);
+  g_subprocess_launcher_setenv (launcher, "DBUS_SESSION_BUS_ADDRESS", g_test_dbus_get_bus_address (dbus), TRUE);
+  g_subprocess_launcher_setenv (launcher, "PATH", g_getenv ("PATH"), TRUE);
+  g_subprocess_launcher_take_stdout_fd (launcher, xdup (STDERR_FILENO));
+
+  argv[0] = "dbus-monitor",
+  argv[1] = NULL;
+
+  g_print ("launching dbus-monitor\n");
+
+ // subprocess = g_subprocess_launcher_spawnv (launcher, argv, &error);
+  g_assert_no_error (error);
 }
 
 static void
