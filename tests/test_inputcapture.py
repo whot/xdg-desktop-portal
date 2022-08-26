@@ -68,9 +68,9 @@ class TestInputCapture(PortalTest):
         )
         assert response == 0
         assert "zones" in results
-        assert "zones_id" in results
+        assert "zone_set" in results
 
-        self.current_zones_id = results["zones_id"]
+        self.current_zone_set = results["zone_set"]
 
         # Check the impl portal was called with the right args
         method_calls = self.mock_interface.GetMethodCalls("GetZones")
@@ -90,7 +90,7 @@ class TestInputCapture(PortalTest):
             session_handle=self.current_session_handle,
             options=options,
             barriers=barriers,
-            zones_id=self.current_zones_id,
+            zone_set=self.current_zone_set,
         )
         assert response == 0
         assert "failed_barriers" in results
@@ -354,7 +354,7 @@ class TestInputCapture(PortalTest):
         assert len(method_calls) == 1
         _, args = method_calls.pop(0)
         assert args[4] == barriers
-        assert args[5] == self.current_zones_id
+        assert args[5] == self.current_zone_set
 
     def test_connect_to_eis(self):
         self.start_impl_portal()

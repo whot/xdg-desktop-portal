@@ -499,7 +499,7 @@ handle_set_pointer_barriers (XdpDbusInputCapture *object,
                              const char *arg_session_handle,
                              GVariant *arg_options,
                              GVariant *arg_barriers,
-                             guint arg_zones_id)
+                             guint arg_zone_set)
 {
   Request *request = request_from_invocation (invocation);
   Session *session;
@@ -587,7 +587,7 @@ handle_set_pointer_barriers (XdpDbusInputCapture *object,
                                                          xdp_app_info_get_id (request->app_info),
                                                          options,
                                                          g_variant_ref(arg_barriers), /* FIXME: validation? */
-                                                         arg_zones_id, /* FIXME: validation? */
+                                                         arg_zone_set, /* FIXME: validation? */
                                                          NULL,
                                                          set_pointer_barriers_done,
                                                          g_object_ref (request));

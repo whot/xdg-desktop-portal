@@ -100,9 +100,9 @@
             </para></listitem>
           </varlistentry>
           <varlistentry>
-            <term>zones_id u</term>
+            <term>zone_set u</term>
             <listitem><para>
-             The zones_id required in
+             The zone_set required in
              org.freedesktop.impl.portal.InputCapture.SetPointerBarriers().
             </para></listitem>
           </varlistentry>
@@ -126,7 +126,7 @@
         @app_id: App id of the application
         @options: Vardict with optional further information
         @barriers: An array of vardicts, each specifying one barrier
-        @zones_id: A unique number referring to the zone set
+        @zone_set: A unique number referring to the zone set
         @response: Numeric response
         @results: Vardict with the results of the call
 
@@ -170,7 +170,7 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
       <arg type="a{sv}" name="options" direction="in"/>
       <arg type="aa{sv}" name="barriers" direction="in"/>
-      <arg type="u" name="zones_id" direction="in"/>
+      <arg type="u" name="zone_set" direction="in"/>
       <arg type="u" name="response" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
       <arg type="a{sv}" name="results" direction="out"/>
