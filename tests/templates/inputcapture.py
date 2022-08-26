@@ -38,7 +38,7 @@ def load(mock, parameters=None):
 
     mock.default_zone = parameters.get("default-zone", [(1920, 1080, 0, 0)])
     mock.current_zones = mock.default_zone
-    mock.current_zones_id = next(serials)
+    mock.current_zone_set = next(serials)
 
     mock.disable_delay = parameters.get("disable-delay", 0)
     mock.activated_delay = parameters.get("activated-delay", 0)
@@ -101,8 +101,8 @@ def GetZones(self, handle, session_handle, app_id, options):
 
         response = Response(0, {})
         response.results["zones"] = self.default_zone
-        response.results["zones_id"] = dbus.UInt32(
-            self.current_zones_id, variant_level=1
+        response.results["zone_set"] = dbus.UInt32(
+            self.current_zone_set, variant_level=1
         )
         logger.debug(f"GetZones with response {response}")
 
@@ -120,14 +120,16 @@ def GetZones(self, handle, session_handle, app_id, options):
     in_signature="oosa{sv}aa{sv}u",
     out_signature="ua{sv}",
 )
-def SetPointerBarriers(self, handle, session_handle, app_id, options, barriers, serial):
+def SetPointerBarriers(
+    self, handle, session_handle, app_id, options, barriers, zone_set
+):
     try:
         logger.debug(
-            f"SetPointerBarriers({session_handle}, {options}, {barriers}, {serial})"
+            f"SetPointerBarriers({session_handle}, {options}, {barriers}, {zone_set})"
         )
 
         assert session_handle in self.active_session_handles
-        assert serial == self.current_zones_id
+        assert zone_set == self.current_zone_set
 
         self.current_barriers = []
 
