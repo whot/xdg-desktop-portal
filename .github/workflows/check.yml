@@ -278,7 +278,7 @@ jobs:
       # Meson to old to build libportal
       # Could not find a pipewire package
       # Geoclue is in 18.04 too old
-      run: ./autogen.sh --disable-pipewire --disable-geoclue --disable-libportal
+      run: ./autogen.sh --disable-pipewire --disable-geoclue --disable-libportal --disable-libei
 
     - name: Build xdg-desktop-portal
       run: make -j $(getconf _NPROCESSORS_ONLN)
