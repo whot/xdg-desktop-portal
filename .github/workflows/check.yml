@@ -79,6 +79,13 @@ jobs:
           python3-gi \
           shared-mime-info
 
+    - name: Install libei
+      run: |
+        $RUN_CMD apt-get install -y --no-install-recommends libprotobuf-c-dev meson git ca-certificates protobuf-compiler protobuf-c-compiler
+        $RUN_CMD git clone https://gitlab.freedesktop.org/libinput/libei
+        $RUN_CMD meson setup _libei_builddir libei
+        $RUN_CMD ninja -C _libei_builddir install
+
     - name: Check out xdg-desktop-portal
       uses: actions/checkout@v2
 
@@ -184,6 +191,13 @@ jobs:
           meson \
           python3-gi \
           shared-mime-info
+
+    - name: Install libei
+      run: |
+        $RUN_CMD apt-get install -y --no-install-recommends libprotobuf-c-dev meson git ca-certificates protobuf-compiler protobuf-c-compiler
+        $RUN_CMD git clone https://gitlab.freedesktop.org/libinput/libei
+        $RUN_CMD meson setup _libei_builddir libei
+        $RUN_CMD ninja -C _libei_builddir install
 
     - name: Check out xdg-desktop-portal
       uses: actions/checkout@v2
