@@ -196,7 +196,7 @@ def Enable(self, session_handle, app_id, options):
         assert session_handle in self.active_session_handles
 
         # for use in the signals
-        serial = next(serials)
+        activation_id = next(serials)
         barrier = self.current_barriers[0]
         pos = (barrier.position[0] + 10, barrier.position[1] + 20)
 
@@ -213,7 +213,7 @@ def Enable(self, session_handle, app_id, options):
             def activated():
                 logger.debug("emitting Activated")
                 options = {
-                    "serial": dbus.UInt32(serial, variant_level=1),
+                    "activation_id": dbus.UInt32(activation_id, variant_level=1),
                     "barrier_id": dbus.UInt32(barrier.id, variant_level=1),
                     "cursor_position": dbus.Struct(
                         pos, signature="dd", variant_level=1
@@ -228,7 +228,7 @@ def Enable(self, session_handle, app_id, options):
             def deactivated():
                 logger.debug("emitting Deactivated")
                 options = {
-                    "serial": dbus.UInt32(serial, variant_level=1),
+                    "activation_id": dbus.UInt32(activation_id, variant_level=1),
                     "cursor_position": dbus.Struct(
                         pos, signature="dd", variant_level=1
                     ),
