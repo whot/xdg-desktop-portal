@@ -482,7 +482,7 @@ class TestInputCapture(PortalTest):
             nonlocal activated_signal_received
             activated_signal_received = True
             assert session_handle == session_handle
-            assert "serial" in options
+            assert "activation_id" in options
             assert "barrier_id" in options
             assert options["barrier_id"] == 10  # template uses first barrier
             assert "cursor_position" in options
@@ -495,7 +495,7 @@ class TestInputCapture(PortalTest):
             nonlocal deactivated_signal_received
             deactivated_signal_received = True
             assert session_handle == session_handle
-            assert "serial" in options
+            assert "activation_id" in options
             assert "cursor_position" in options
             assert options["cursor_position"] == (
                 10.0,

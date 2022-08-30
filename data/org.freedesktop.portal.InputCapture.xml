@@ -407,22 +407,25 @@
         Supported keys in the @options vardict include:
         <variablelist>
           <varlistentry>
-            <term>serial u</term>
+            <term>activation_id u</term>
             <listitem><para>
-                A serial number that can be used to synchronize with the
-                transport-layer. This serial number has no intrinsic meaning but
+                A number that can be used to synchronize with the
+                transport-layer. This number has no intrinsic meaning but
                 is guaranteed to increase by an unspecified amount on each call.
 
-                In particular: if the compositor sends a serial of N as part
-                of this request it will also set the
-                org.freedesktop.portal.InputCapture.serial property to the same value N
-                on the EIS connection before the first event from a device is sent.
+                In particular: if the compositor sends a activation_id of N as
+                part of this request it will also set the
+                org.freedesktop.portal.InputCapture.activation_id property to
+                the same value N on the EIS connection before the first event
+                from a device is sent.
                 This allows an application to have a synchronization point and
                 attribute an event sequence to the portal interaction.
 
-                Applications must be able to handle the serial number wrapping
-                around. Implementations of this portal must to increase the
-                serial number by an sensible amount to allow for wrapping detection.
+                Applications must be able to handle the activation_id number
+                wrapping around. Implementations of this portal must to increase
+                the activation_id number by an sensible amount to allow for
+                wrapping
+                detection.
             </para></listitem>
           </varlistentry>
           <varlistentry>
@@ -475,9 +478,9 @@
         Supported keys in the @options vardict include:
         <variablelist>
           <varlistentry>
-            <term>serial u</term>
+            <term>activation_id u</term>
             <listitem><para>
-                The same serial number as in the corresponding
+                The same activation_id number as in the corresponding
                 #org.freedesktop.portal.InputCapture::Activated signal.
             </para></listitem>
           </varlistentry>
