@@ -102,7 +102,7 @@
           <varlistentry>
             <term>zone_set u</term>
             <listitem><para>
-             The zone_set required in
+             The zone_set ID required in
              org.freedesktop.impl.portal.InputCapture.SetPointerBarriers().
             </para></listitem>
           </varlistentry>
@@ -126,7 +126,7 @@
         @app_id: App id of the application
         @options: Vardict with optional further information
         @barriers: An array of vardicts, each specifying one barrier
-        @zone_set: A unique number referring to the zone set
+        @zone_set: A unique ID referring to the zone set
         @response: Numeric response
         @results: Vardict with the results of the call
 
