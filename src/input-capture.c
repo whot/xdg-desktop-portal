@@ -801,6 +801,7 @@ handle_disable (XdpDbusInputCapture *object,
 
 static XdpOptionKey input_capture_release_options[] = {
   { "cursor_position", (const GVariantType *)"(dd)", NULL },
+  { "activation_id", G_VARIANT_TYPE_UINT32, NULL },
 };
 
 static gboolean

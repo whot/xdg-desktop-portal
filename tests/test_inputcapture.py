@@ -146,8 +146,8 @@ class TestInputCapture(PortalTest):
         _, args = method_calls[-1]
         assert args[0] == self.current_session_handle
 
-    def release(self, cursor_position=None):
-        options = {}
+    def release(self, activation_id: int, cursor_position=None):
+        options = {"activation_id": dbus.UInt32(activation_id)}
         if cursor_position:
             options["cursor_position"] = dbus.Struct(
                 list(cursor_position), signature="dd", variant_level=1
@@ -162,6 +162,9 @@ class TestInputCapture(PortalTest):
         assert len(method_calls) > 0
         _, args = method_calls[-1]
         assert args[0] == self.current_session_handle
+        assert "activation_id" in args[2]
+        aid = args[2]["activation_id"]
+        assert aid == activation_id
         if cursor_position:
             assert "cursor_position" in args[2]
             pos = args[2]["cursor_position"]
@@ -552,14 +555,16 @@ class TestInputCapture(PortalTest):
         disabled_signal_received = False
         activated_signal_received = False
         deactivated_signal_received = False
+        activation_id = None
 
         def cb_disabled(session_handle, options):
             nonlocal disabled_signal_received
             disabled_signal_received = True
 
         def cb_activated(session_handle, options):
-            nonlocal activated_signal_received
+            nonlocal activated_signal_received, activation_id
             activated_signal_received = True
+            activation_id = options["activation_id"]
 
         def cb_deactivated(session_handle, options):
             nonlocal deactivated_signal_received
@@ -577,10 +582,11 @@ class TestInputCapture(PortalTest):
         mainloop.run()
 
         assert activated_signal_received
+        assert activation_id is not None
         assert not deactivated_signal_received
         assert not disabled_signal_received
 
-        self.release(cursor_position=(10.0, 50.0))
+        self.release(cursor_position=(10.0, 50.0), activation_id=activation_id)
 
         # XDP should filter any signals the implementation may
         # send after Release().

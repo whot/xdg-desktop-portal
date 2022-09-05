@@ -223,6 +223,13 @@
         Supported keys in the @options vardict include:
         <variablelist>
           <varlistentry>
+            <term>activation_id u</term>
+            <listitem><para>
+              The same activation_id number as in the
+              #org.freedesktop.impl.portal.InputCapture::Activated signal.
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
             <term>cursor_position dd</term>
             <listitem><para>
               The suggested cursor position within the Zones available in

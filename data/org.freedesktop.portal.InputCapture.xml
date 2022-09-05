@@ -341,8 +341,24 @@
         Release any ongoing input capture. No
         #org.freedesktop.portal.InputCapture::Deactivated signal will be emitted.
 
+        The activation_id provided in the @options vardict specifies which
+        currently ongoing input capture should be terminated. The asynchronous
+        nature of this portal allows for an input capture to be Deactivated and
+        a new input capture to be Activated before the client requests the
+        Release for the previous input capture.
+
+        A compositor should ignore a Release request for a no longer active
+        activation_id.
+
         Supported keys in the @options vardict include:
         <variablelist>
+          <varlistentry>
+            <term>activation_id u</term>
+            <listitem><para>
+              The same activation_id number as in the
+              #org.freedesktop.portal.InputCapture::Activated signal.
+            </para></listitem>
+          </varlistentry>
           <varlistentry>
             <term>cursor_position dd</term>
             <listitem><para>
