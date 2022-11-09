@@ -1503,7 +1503,7 @@ on_supported_device_types_changed (GObject *gobject,
 static void
 remote_desktop_init (RemoteDesktop *remote_desktop)
 {
-  xdp_dbus_remote_desktop_set_version (XDP_DBUS_REMOTE_DESKTOP (remote_desktop), 1);
+  xdp_dbus_remote_desktop_set_version (XDP_DBUS_REMOTE_DESKTOP (remote_desktop), 2);
 
   g_signal_connect (impl, "notify::supported-device-types",
                     G_CALLBACK (on_supported_device_types_changed),
