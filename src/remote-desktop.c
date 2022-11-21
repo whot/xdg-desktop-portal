@@ -1407,13 +1407,18 @@ handle_connect_to_eis (XdpDbusRemoteDesktop *object,
 
   switch (remote_desktop_session->state)
     {
+    case REMOTE_DESKTOP_SESSION_STATE_STARTED:
+      break;
     case REMOTE_DESKTOP_SESSION_STATE_INIT:
     case REMOTE_DESKTOP_SESSION_STATE_DEVICES_SELECTED:
     case REMOTE_DESKTOP_SESSION_STATE_SELECTING_DEVICES:
     case REMOTE_DESKTOP_SESSION_STATE_SOURCES_SELECTED:
     case REMOTE_DESKTOP_SESSION_STATE_SELECTING_SOURCES:
-      break;
-    case REMOTE_DESKTOP_SESSION_STATE_STARTED:
+      g_dbus_method_invocation_return_error (invocation,
+                                             G_DBUS_ERROR,
+                                             G_DBUS_ERROR_FAILED,
+                                             "Session is not ready");
+      return G_DBUS_METHOD_INVOCATION_HANDLED;
     case REMOTE_DESKTOP_SESSION_STATE_STARTING:
       g_dbus_method_invocation_return_error (invocation,
                                              G_DBUS_ERROR,

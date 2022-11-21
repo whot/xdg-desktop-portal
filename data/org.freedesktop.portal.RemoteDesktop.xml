@@ -400,7 +400,7 @@
         This method may only be called once per session, where the EIS
         implementation disconnects the session should be closed.
 
-        This method must be called before #org.freedesktop.portal.RemoteDesktop.Start()
+        This method must be called after #org.freedesktop.portal.RemoteDesktop.Start()
 
         Once an EIS connection is established, input events must be sent exclusively via
         the EIS connection. Any events submitted via NotifyPointerMotion,
