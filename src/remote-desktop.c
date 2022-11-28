@@ -1396,7 +1396,7 @@ handle_connect_to_eis (XdpDbusRemoteDesktop *object,
 
   remote_desktop_session = (RemoteDesktopSession *)session;
 
-  if (!remote_desktop_session->uses_eis)
+  if (remote_desktop_session->uses_eis)
     {
       g_dbus_method_invocation_return_error (invocation,
                                              G_DBUS_ERROR,
