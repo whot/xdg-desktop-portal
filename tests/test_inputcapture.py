@@ -181,7 +181,7 @@ class TestInputCapture(PortalTest):
 
     def test_supported_capabilities(self):
         params = {
-            "supported_capabilities": 0b1110,  # POINTER_ABS, KEYBOARD, TOUCH
+            "supported_capabilities": 0b101,  # KEYBOARD, POINTER, TOUCH
         }
         self.start_impl_portal(params)
         self.start_xdp()
@@ -190,13 +190,13 @@ class TestInputCapture(PortalTest):
         caps = properties_intf.Get(
             "org.freedesktop.portal.InputCapture", "SupportedCapabilities"
         )
-        assert caps == 0b1110
+        assert caps == 0b101
 
     def test_create_session(self):
         self.start_impl_portal()
         self.start_xdp()
 
-        self.create_session(capabilities=0b1)  # RELATIVE_POINTER
+        self.create_session(capabilities=0b1)  # KEYBOARD
 
         # Check the impl portal was called with the right args
         method_calls = self.mock_interface.GetMethodCalls("CreateSession")
@@ -207,14 +207,14 @@ class TestInputCapture(PortalTest):
 
     def test_create_session_limited_caps(self):
         params = {
-            "capabilities": 0b110,  # POINTER_ABS, KEYBOARD
-            "supported_capabilities": 0b1110,  # POINTER_ABS, KEYBOARD, TOUCH
+            "capabilities": 0b110,  # TOUCH, POINTER
+            "supported_capabilities": 0b111,  # TOUCH, POINTER, KEYBOARD
         }
         self.start_impl_portal(params)
         self.start_xdp()
 
         # Request more caps than are supported
-        response, results = self.create_session(capabilities=0b1111)
+        response, results = self.create_session(capabilities=0b111)
         caps = results["capabilities"]
         # Returned capabilities must the ones we set up in the params
         assert caps == 0b110
@@ -224,7 +224,7 @@ class TestInputCapture(PortalTest):
         assert len(method_calls) == 1
         _, args = method_calls.pop(0)
         assert args[3] == ""  # parent window
-        assert args[4]["capabilities"] == 0b1111
+        assert args[4]["capabilities"] == 0b111
 
     def test_get_zones(self):
         zones = [(1024, 768, 0, 0), (640, 480, 1024, 0)]

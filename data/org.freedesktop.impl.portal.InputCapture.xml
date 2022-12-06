@@ -426,10 +426,9 @@
         Currently defined types are:
 
         <simplelist>
-          <member>1: RELATIVE_POINTER</member>
-          <member>2: ABSOLUTE_POINTER</member>
-          <member>4: KEYBOARD</member>
-          <member>8: TOUCH</member>
+          <member>1: KEYBOARD</member>
+          <member>2: POINTER</member>
+          <member>4: TOUCHSCREEN</member>
         </simplelist>
     -->
     <property name="SupportedCapabilities" type="u" access="read"/>
