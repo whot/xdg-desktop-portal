@@ -94,10 +94,11 @@ jobs:
 
     - name: Install libei
       run: |
-        $RUN_CMD apt-get install -y --no-install-recommends libprotobuf-c-dev meson git ca-certificates protobuf-compiler protobuf-c-compiler
-        $RUN_CMD git clone https://gitlab.freedesktop.org/libinput/libei
-        $RUN_CMD meson setup _libei_builddir libei
+        $RUN_CMD apt-get install --quiet -y --no-install-recommends libprotobuf-c-dev meson git ca-certificates protobuf-compiler protobuf-c-compiler
+        $RUN_CMD git clone --quiet --depth=1 https://gitlab.freedesktop.org/libinput/libei
+        $RUN_CMD meson setup -Ddocumentation=false -Dliboeffis=disabled -Dtests=false -Dprefix=/usr -Dlibdir=/usr/lib _libei_builddir libei
         $RUN_CMD ninja -C _libei_builddir install
+        $RUN_CMD rm -rf _libei_builddir libei
 
     - name: Check out xdg-desktop-portal
       uses: actions/checkout@v3
