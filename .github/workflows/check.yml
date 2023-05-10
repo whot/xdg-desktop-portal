@@ -95,11 +95,6 @@ jobs:
       env:
         MESON_OPTIONS: -Dinstalled-tests=true -Db_sanitize=${{ matrix.sanitizer }}
 
-    - name: Run dbus-daemon
-      run: |
-        $RUN_CMD $AS_USER sh -c "dbus-daemon --fork --session --print-address > dbus-env"
-        echo "DBUS_SESSION_BUS_ADDRESS=$($RUN_CMD $AS_USER cat dbus-env)" >> "$GITHUB_ENV"
-
     - name: Run xdg-desktop-portal tests
       run: $RUN_CMD $AS_USER timeout --signal=KILL -v ${TESTS_TIMEOUT}m meson test -C ${BUILDDIR}
       env:
