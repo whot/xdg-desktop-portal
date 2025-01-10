@@ -46,6 +46,26 @@ class TestRemoteDesktop:
         session.close()
         xdp.wait_for(lambda: session.closed)
 
+    def test_remote_desktop_create_session_invalid(self, portals, dbus_con):
+        remotedesktop_intf = xdp.get_portal_iface(dbus_con, "RemoteDesktop")
+        mock_intf = xdp.get_mock_iface(dbus_con)
+
+        request = xdp.Request(dbus_con, remotedesktop_intf)
+        options = {
+            "session_handle_token": "Invalid-token&"
+        }
+
+        with pytest.raises(dbus.exceptions.DBusException) as excinfo:
+            response = request.call(
+                "CreateSession",
+                options=options,
+            )
+
+        e = excinfo.value
+        assert e.get_dbus_name() == "org.freedesktop.portal.Error.InvalidArgument"
+        assert "Invalid token" in e.get_dbus_message()
+
+
     @pytest.mark.parametrize(
         "template_params", ({"remotedesktop": {"force-close": 500}},)
     )
