@@ -322,31 +322,16 @@ if enable_pytest
     'test_wallpaper.py',
   ]
 
-  template_files = [
-    'templates/access.py',
-    'templates/account.py',
-    'templates/appchooser.py',
-    'templates/background.py',
-    'templates/clipboard.py',
-    'templates/dynamiclauncher.py',
-    'templates/email.py',
-    'templates/filechooser.py',
-    'templates/geoclue2.py',
-    'templates/globalshortcuts.py',
-    'templates/inhibit.py',
-    'templates/__init__.py',
-    'templates/inputcapture.py',
-    'templates/lockdown.py',
-    'templates/notification.py',
-    'templates/print.py',
-    'templates/remotedesktop.py',
-    'templates/screenshot.py',
-    'templates/settings.py',
-    'templates/usb.py',
-    'templates/wallpaper.py',
-  ]
+  subdir('templates')
+
+  fs = import('fs')
+  fs.copyfile('asan.suppression')
+  fs.copyfile('conftest.py')
+  fs.copyfile('__init__.py')
 
   foreach pytest_file : pytest_files
+    fs.copyfile(pytest_file)
+
     testname = pytest_file.replace('.py', '')
     test(
       'pytest/@0@'.format(testname),
@@ -365,10 +350,6 @@ if enable_pytest
       'conftest.py',
       'asan.suppression',
       install_dir: installed_tests_dir / 'tests',
-    )
-    install_data(
-      template_files,
-      install_dir: installed_tests_dir / 'tests' / 'templates',
     )
 
     installed_env = {
@@ -466,4 +447,12 @@ if enable_installed_tests
   endforeach
 endif
 
-meson.add_devenv(test_env)
+devenv = environment()
+# devenv.set('XDG_DATA_DIRS', meson.current_build_dir() / 'share')
+devenv.set('XDG_CURRENT_DESKTOP', 'GNOME')
+devenv.set('XDG_DESKTOP_PORTAL_PATH', xdg_desktop_portal.full_path())
+devenv.set('XDG_PERMISSION_STORE_PATH', xdg_permission_store.full_path())
+devenv.set('XDG_DOCUMENT_PORTAL_PATH', xdg_document_portal.full_path())
+devenv.set('XDP_VALIDATE_ICON', xdp_validate_icon.full_path())
+devenv.set('XDP_VALIDATE_SOUND', xdp_validate_sound.full_path())
+meson.add_devenv(devenv)
